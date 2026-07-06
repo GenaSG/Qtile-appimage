@@ -7,7 +7,9 @@ APPDIR="${APP}.AppDir"
 APPDIR_BIN="${APPDIR}/usr/bin"
 APPDIR_ENV="${APPDIR}/env"
 which python3 || exit 1
+which pip3 || exit 1
 PYTHON_BIN=$(which python3)
+PIP_BIN=$(which pip3)
 
 LINUXDEPLOY="https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
 APPIMAGETOOL="https://github.com/pkgforge-dev/appimagetool-uruntime/releases/download/continuous/appimagetool-x86_64.AppImage"
@@ -30,7 +32,7 @@ cp -r ./config ./${APPDIR}/
 cp $PYTHON_BIN ./${APPDIR_BIN}/python
 ./linuxdeploy-x86_64.AppImage --appdir=./${APPDIR} --executable=./${APPDIR_BIN}/python --desktop-file=./${APP}.desktop --icon-file=./${APP}.png --custom-apprun=./AppRun || exit 1
 
-bash -xc "${APPDIR_BIN}/python -m venv ./${APPDIR_ENV} && source ./${APPDIR_ENV}/bin/activate && ${APPDIR_ENV}/bin/pip install qtile || exit 1" || exit 1
+$PIP_BIN install --upgrade --target ${APPDIR}/qtile qtile
 
 #BUILD IMAGE
 ./appimagetool-x86_64.AppImage ./${APPDIR}

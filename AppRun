@@ -1,12 +1,13 @@
 #!/bin/sh
 APPDIR="$(dirname "$(readlink -f "$0")")"
-export PATH="${APPDIR}/usr/bin:${PATH}"
+export PATH="${APPDIR}/usr/bin:${APPDIR}/qtile/bin:${PATH}"
 
 if [ ! -d ~/.config/qtile ]; then
     cp -r ${APPDIR}/config ~/.config/qtile
 fi
 
-source ${APPDIR}/env/bin/activate
+export PYTHONPATH="${APPDIR}/qtile:${PYTHONPATH}"
+
 while true; do
-    exec "${APPDIR}/env/bin/qtile" "$@"
+    exec "${APPDIR}/qtile/bin/qtile" "$@"
 done
