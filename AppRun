@@ -1,0 +1,12 @@
+#!/bin/sh
+APPDIR="$(dirname "$(readlink -f "$0")")"
+export PATH="${APPDIR}/usr/bin:${PATH}"
+
+if [ ! -d ~/.config/qtile ]; then
+    cp -r ${APPDIR}/config ~/.config/qtile
+fi
+
+source ${APPDIR}/env/bin/activate
+while true; do
+    exec "${APPDIR}/env/bin/qtile" "$@"
+done
