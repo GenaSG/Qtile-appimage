@@ -35,7 +35,7 @@ cp -r ./config ./${APPDIR}/
 
 #ADD ROFI
 cp $ROFI_BIN ./${APPDIR_BIN}/rofi
-wget ${ROFI_POWER_MENU} -o ./${APPDIR_BIN}/rofi-power-menu
+wget ${ROFI_POWER_MENU} -O ./${APPDIR_BIN}/rofi-power-menu
 chmod +x ./${APPDIR_BIN}/rofi-power-menu
 #ADD PYTHON BIN
 cp $PYTHON_BIN ./${APPDIR_BIN}/python
