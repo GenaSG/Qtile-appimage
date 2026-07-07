@@ -8,8 +8,12 @@ APPDIR_BIN="${APPDIR}/usr/bin"
 APPDIR_ENV="${APPDIR}/env"
 which python3 || exit 1
 which pip3 || exit 1
+which rofi || exit 1
+
 PYTHON_BIN=$(which python3)
 PIP_BIN=$(which pip3)
+ROFI_BIN=$(which rofi)
+
 
 LINUXDEPLOY="https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage"
 APPIMAGETOOL="https://github.com/pkgforge-dev/appimagetool-uruntime/releases/download/continuous/appimagetool-x86_64.AppImage"
@@ -29,8 +33,14 @@ fi
 cp -r ./config ./${APPDIR}/
 
 #PREPARE APPDIR
+#ADD ROFI
+cp $ROFI_BIN ./${APPDIR_BIN}/rofi
+
 cp $PYTHON_BIN ./${APPDIR_BIN}/python
+
 ./linuxdeploy-x86_64.AppImage --appdir=./${APPDIR} --executable=./${APPDIR_BIN}/python --desktop-file=./${APP}.desktop --icon-file=./${APP}.png --custom-apprun=./AppRun || exit 1
+
+./linuxdeploy-x86_64.AppImage --appdir=./${APPDIR} --executable=./${APPDIR_BIN}/rofi --desktop-file=./${APP}.desktop --icon-file=./${APP}.png --custom-apprun=./AppRun || exit 1
 
 $PIP_BIN install --upgrade --target ${APPDIR}/qtile qtile
 
