@@ -116,6 +116,7 @@ keys = [
     Key([mod, "control"], "q", lazy.shutdown(), desc="Shutdown Qtile"),
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Spawn rofi launcher"),
+    Key([mod,"shift"], "d", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu"), desc="Spawn rofi power menu"),
     Key([mod,"shift"], "r", lazy.function(refresh_screens), desc="Refresh screen configuration"),
 ]
 
