@@ -39,7 +39,8 @@ wget ${ROFI_POWER_MENU} -O ./${APPDIR_BIN}/rofi-power-menu
 chmod +x ./${APPDIR_BIN}/rofi-power-menu
 #ADD PYTHON BIN
 cp $PYTHON_BIN ./${APPDIR_BIN}/python
-
+#COPY STDLIB LIBRARY
+cp -r /usr/lib/python3.10 ${APPDIR}/usr/lib/
 
 #PREPARE APPDIR
 ./linuxdeploy-x86_64.AppImage --appdir=./${APPDIR} --executable=./${APPDIR_BIN}/python --desktop-file=./${APP}.desktop --icon-file=./${APP}.png --custom-apprun=./AppRun || exit 1
