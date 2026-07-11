@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -xu
 ARCH=x86_64
@@ -32,6 +32,7 @@ fi
 [ -d ./${APPDIR} ] && rm -rf ./${APPDIR}
 [ ! -d ./${APPDIR} ] && mkdir -p ./${APPDIR_BIN}
 cp -r ./config ./${APPDIR}/
+mkdir -p ./${APPDIR}/usr/lib
 
 #ADD ROFI
 cp $ROFI_BIN ./${APPDIR_BIN}/rofi
@@ -40,7 +41,7 @@ chmod +x ./${APPDIR_BIN}/rofi-power-menu
 #ADD PYTHON BIN
 cp $PYTHON_BIN ./${APPDIR_BIN}/python
 #COPY STDLIB LIBRARY
-cp -r /usr/lib/python3.10 ${APPDIR}/usr/lib/
+cp -r $(${PYTHON_BIN} -c "import sysconfig; print(sysconfig.get_path('stdlib'))") ${APPDIR}/usr/lib/
 
 #PREPARE APPDIR
 ./linuxdeploy-x86_64.AppImage --appdir=./${APPDIR} --executable=./${APPDIR_BIN}/python --desktop-file=./${APP}.desktop --icon-file=./${APP}.png --custom-apprun=./AppRun || exit 1
