@@ -27,8 +27,9 @@
 import os
 
 import libqtile.resources
+import re
 from libqtile import bar, layout, qtile, widget
-from libqtile.config import Click, Drag, Group, Key, Match, Screen
+from libqtile.config import Click, Drag, Group, Key, Match, Screen, ScratchPad, DropDown
 from libqtile.lazy import lazy
 from libqtile.utils import guess_terminal
 from libqtile.log_utils import logger
@@ -39,35 +40,6 @@ terminal = guess_terminal()
 screens = []
 
 
-def refresh_screens(qtile):
-    print("refreshing screens")
-    logger.warning(f'Screens count {len(qtile.screens)}')
-    for screen in qtile.screens:
-        if screen.top == None:
-            screen.top = bar.Bar(
-                [
-                    widget.CurrentLayout(),
-                    widget.GroupBox(),
-                    widget.Prompt(),
-                    widget.WindowName(),
-                    widget.Chord(
-                        chords_colors={
-                            "launch": ("#ff0000", "#ffffff"),
-                        },
-                        name_transform=lambda name: name.upper(),
-                    ),
-                    #widget.TextBox("default config", name="default"),
-                    #widget.TextBox("Press &lt;M-r&gt; to spawn", foreground="#d75f5f"),
-                    # NB Systray is incompatible with Wayland, consider using StatusNotifier instead
-                    # widget.StatusNotifier(),
-                    widget.Systray(),
-                    widget.Clock(format="%Y-%m-%d %a %I:%M %p"),
-                    widget.QuickExit(),
-                ],
-                24,
-                # border_width=[2, 0, 2, 0],  # Draw top and bottom borders
-                # border_color=["ff00ff", "000000", "ff00ff", "000000"]  # Borders are magenta
-            )
 
 keys = [
     # A list of available commands that can be bound to keys can be found
@@ -117,7 +89,7 @@ keys = [
     Key([mod], "r", lazy.spawncmd(), desc="Spawn a command using a prompt widget"),
     Key([mod], "d", lazy.spawn("rofi -show drun"), desc="Spawn rofi launcher"),
     Key([mod,"shift"], "d", lazy.spawn("rofi -show power-menu -modi power-menu:rofi-power-menu"), desc="Spawn rofi power menu"),
-    Key([mod,"shift"], "r", lazy.function(refresh_screens), desc="Refresh screen configuration"),
+    Key([mod], "grave", lazy.group["scratchpad"].dropdown_toggle("term"), desc="Toggle scratchpad"),
 ]
 
 # Add key bindings to switch VTs in Wayland.
@@ -162,6 +134,19 @@ for i in groups:
             ),
         ]
     )
+
+dropdowns = [
+    DropDown("term", terminal, width=0.9, height=0.9, x=0.05, y=0.05, opacity=1, match=Match(wm_class=re.compile(fr"{terminal}", re.IGNORECASE))),
+]
+
+
+# Make dropdowns floating windows to have borders
+for dropdown in dropdowns:
+    dropdown.floating = True
+
+groups.append(
+    ScratchPad("scratchpad", dropdowns),
+)
 
 layout_theme = {
     "border_width": 5,
